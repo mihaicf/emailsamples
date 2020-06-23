@@ -1,0 +1,152 @@
+%%[ /* <br><br><span> - BLOCK containing image/title/text/cta - </span><br><br><div style="display:none;"> */ ]%%
+%%[
+    Set @Has_Mobile = 0   /* Put 1 when the image has mobile version */
+    Set @Mod_Separator_Type = ""  /*  choose from default & type1 & type2 */
+    SET @Mod_Separator_Width = "" /* any value as long as the .jpg or .png has the exact same width */
+    Set @Mod_BG_Image = ""          /* put URL for background image if necessary */
+    SET @Mod_BG_Color = ""          /* put special color for background image, if using Email_BG_Image put "transparent" as value */
+    Set @Mod_ID = ""
+    Set @Mod_Image_Padding = ""
+    Set @Mod_Text_Margin = ""
+    SET @Mod_Image_Width = "" 
+]%%
+
+%%[
+    Set @Mod_Tracking_ID = Concat(@Mod_ID, "_", Field(@Content_Row, Concat(@Mod_ID, "_Tracking"), 0))
+    Set @Mod_Image = Field(@Content_Row, Concat(@Mod_ID, "_Image"), 0)
+    Set @Mod_Image_Mobile = IIF(@Has_Mobile, REPLACE(@Mod_Image, "DESKTOP", "MOBILE"), @Mod_Image)
+    Set @Mod_URL = Field(@Content_Row, Concat(@Mod_ID, "_URL"), 0)
+    Set @Mod_Image_Alt = Concat(@Mod_Tracking_ID, "_IMAGE")
+    Set @Mod_Image_Alias = Concat(@Mod_Tracking_ID, "_IMAGE")
+    Set @Mod_Title_Text = Field(@Content_Row, Concat(@Mod_ID, "_Title_Text"), 0)
+    Set @Mod_Body_Copy = Field(@Content_Row, Concat(@Mod_ID, "_Body_Copy"), 0)
+    Set @Mod_CTA_Text = Field(@Content_Row, Concat(@Mod_ID, "_CTA_Text"), 0)
+    Set @Mod_CTA_Alias =  Concat(@Mod_Tracking_ID, "_CTA")
+    Set @Len_CTA = Length(@Mod_CTA_Text)
+  
+    IF @Mod_BG_Color == "" THEN 
+    Set @Mod_BG_Color = v(@BG_Color)
+    ENDIF
+
+]%%
+
+<!--[if mso]>
+<table cellpadding="0" cellspacing="0" border="0" style="width: 600px; margin: 0 auto;">
+	<tr>
+		<td style="width: 600px; height: auto; padding: 0; text-align: center;">
+<![endif]-->
+
+<div class="paddingWrapper" style="width: 100%; max-width: 600px; height: auto; padding: 0;">
+
+	<!--[if mso]>
+	<table cellpadding="0" cellspacing="0" border="0" style="width: 600px; margin: 0 auto;">
+		<tr>
+			<td align="left" valign="top" style="background-image: url('%%=v(@Mod_BG_Image)=%%'); background-repeat: no-repeat; background-position: top center;background-size: cover; background-color: %%=v(@Mod_BG_Color)=%%;">
+	<![endif]-->
+
+	<div style="width: 100%; height: auto; margin: 0; padding: 0; background-image: url('%%=v(@Mod_BG_Image)=%%'); background-repeat: no-repeat; background-position: top center; background-size: 100%; background-color: %%=v(@Mod_BG_Color)=%%;">
+
+		<!--[if mso]>
+		<table cellpadding="0" cellspacing="0" border="0" style="width: 600px; height: auto;">
+			<tr>
+				<td style="width: 600px; height: auto; padding: 0 0 10px 0;" valign="top" align="center">
+		<![endif]-->
+
+		<div class="columnContainer" style="display: block; width: 100%; max-width: 600px; height: auto; padding: 0 0 10px 0; text-align: center;">
+
+			%%[ IF NOT Empty(@Mod_URL) AND NOT Empty(@Mod_Image) THEN ]%%
+
+			<!--[if mso]>
+			<table cellpadding="0" cellspacing="0" border="0">
+				<tr>
+					<td style="padding: %%=v(@Mod_Image_Padding)=%%;">
+			<![endif]-->
+			<a href="%%=RedirectTo(@Mod_URL)=%%" alias="%%=v(@Mod_Image_Alias)=%%" target="_blank" style="display: block; width: 100%; height: auto; margin: 0; padding: %%=v(@Mod_Image_Padding)=%%; text-align: center;">
+				<img src="%%=v(@Mod_Image)=%%" alt="%%=v(@Mod_Image_Alt)=%%" style="display: inline-block; width: 100%; height: auto; max-width: %%=v(@Mod_Image_Width)=%%px; border: none;">
+			</a>
+			<!--[if mso]>
+					</td>
+				</tr> 
+			</table>
+			<![endif]-->
+
+			%%[ ELSEIF NOT Empty(@Mod_Image) THEN ]%%
+
+			<!--[if mso]>
+			<table cellpadding="0" cellspacing="0" border="0">
+				<tr>
+					<td style="padding: %%=v(@Mod_Image_Padding)=%%;">
+			<![endif]-->
+			<p style="display: block; width: 100%; height: auto; margin: 0; padding: %%=v(@Mod_Image_Padding)=%%; text-align: center;">
+				<img src="%%=v(@Mod_Image)=%%" alt="%%=v(@Mod_Image_Alt)=%%" style="display: inline-block; width: 100%; height: auto; max-width: %%=v(@Mod_Image_Width)=%%px; border: none;">
+			</p>
+			<!--[if mso]>
+					</td>
+				</tr> 
+			</table>
+			<![endif]-->
+
+			%%[ ELSE ]%%
+
+			%%[ ENDIF ]%%
+			
+			%%[ IF NOT Empty(@Mod_Title_Text) THEN ]%%
+
+			<h2 %%=IIF(@RightToLeft, 'dir="rtl"', '')=%% style="font-family: %%=v(@Title_Font_Family)=%%; font-size: 19px; font-weight: bold; line-height: 1.3; color: %%=v(@Title_Font_Color)=%%; text-align: center; margin: %%=v(@Mod_Text_Margin)=%%; padding: 0 10px 0 10px;">
+			  %%=treatascontent(@Mod_Title_Text)=%%
+			</h2>
+
+			%%[ ENDIF ]%%
+			
+			%%[ IF NOT Empty(@Mod_Body_Copy) THEN ]%%
+
+			<p %%=IIF(@RightToLeft, 'dir="rtl"', '')=%% style="font-family: %%=v(@Font_Family)=%%; font-size: 15px; font-weight: normal; line-height: 1.5; color: %%=v(@Font_Color)=%%; text-align: center; margin: %%=v(@Mod_Text_Margin)=%%; padding: 0 10px 0 10px;">
+			  %%=treatascontent(@Mod_Body_Copy)=%%
+			</p>
+
+			%%[ ENDIF ]%%
+			
+			%%[ IF NOT Empty(@Mod_CTA_Text) THEN ]%%
+
+			<div %%=IIF(@RightToLeft, 'dir="rtl"', '')=%% style="display: inline-block; width: 100%; max-width: 400px; height: auto; text-align: center; margin: 12px 0 10px 0; padding: 0;">
+
+				<!--[if mso]>
+				<v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="%%=RedirectTo(@Mod_URL)=%%" alias="%%=v(@Mod_CTA_Alias)=%%" style="v-text-anchor: middle; width: %%=IIF(@Len_CTA>=16, '380px','220px')=%%; height: %%=IIF(@Len_CTA>=27, '72px','42px')=%%;" arcsize="%%=v(@CTA_Border_Radius_Ratio)=%%" strokecolor="%%=v(@CTA_Border_Color)=%%" strokeweight="%%=v(@CTA_Border_Size)=%%" fillcolor="%%=v(@CTA_Button_Color)=%%">
+				<w:anchorlock/>
+					<center style="color: %%=v(@CTA_Font_Color)=%%; font-family: %%=v(@CTA_Font_Family)=%%; font-size: 17px; font-weight: bold; text-transform: uppercase;">%%=v(@Mod_CTA_Text)=%%</center>
+				</v:roundrect>
+				<![endif]-->
+
+				<a href="%%=RedirectTo(@Mod_URL)=%%" alias="%%=v(@Mod_CTA_Alias)=%%" target="_blank" style="display: inline-block; height: auto; padding: 10px 15px; margin: 0 20px; background-color: %%=v(@CTA_Button_Color)=%%; border: %%=v(@CTA_Border_Size)=%% solid %%=v(@CTA_Border_Color)=%%; border-radius: %%=v(@CTA_Border_Radius)=%%; color: %%=v(@CTA_Font_Color)=%%; font-family: %%=v(@CTA_Font_Family)=%%; font-size: 18px; font-weight: bold; text-align: center; cursor: pointer; text-transform: uppercase; text-decoration: none; -webkit-text-size-adjust: none; mso-hide: all;">
+					%%=v(@Mod_CTA_Text)=%%
+				</a>
+
+			</div>
+
+			%%[ ENDIF ]%%
+
+		</div>
+
+		<!--[if mso]>
+				</td>
+			</tr>
+		</table>
+		<![endif]-->
+
+	</div>
+
+	<!--[if mso]>
+			</td>
+		</tr>
+	</table>
+	<![endif]-->
+
+</div>
+
+<!--[if mso]>
+		</td>
+	</tr>
+</table>
+<![endif]-->
+
+%%[ /* </div> */ ]%%
